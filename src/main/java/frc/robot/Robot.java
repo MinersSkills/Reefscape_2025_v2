@@ -8,13 +8,16 @@ import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.cscore.UsbCamera;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.PS4Controller;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.Constants.OperatorConstants;
+import edu.wpi.first.wpilibj.DigitalInput;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -31,6 +34,10 @@ public class Robot extends TimedRobot {
   private RobotContainer m_robotContainer;
 
   private Timer disabledTimer;
+
+  private PS4Controller controle;
+
+  private DigitalInput sensotic;
 
   public Robot() {
     instance = this;
@@ -50,15 +57,17 @@ public class Robot extends TimedRobot {
     m_robotContainer = new RobotContainer();
 
     disabledTimer = new Timer();
+
+    sensotic = new DigitalInput(0);
+
+    controle = new PS4Controller(0);
     // SmartDashboard.putNumber("Tempo de partida", DriverStation.getMatchTime());
-    // SmartDashboard.putNumber("Bateria", RobotController.getBatteryVoltage());
 
     UsbCamera camera = CameraServer.startAutomaticCapture();
 
     camera.setFPS(30);
 
     camera.setResolution(640, 480);
-    
 
     if (isSimulation()) {
       DriverStation.silenceJoystickConnectionWarning(true);
@@ -69,10 +78,18 @@ public class Robot extends TimedRobot {
   public void robotPeriodic() {
 
     CommandScheduler.getInstance().run();
+    // m_robotContainer.elevador.dashboard();
+    // m_robotContainer.garra.dashboard();
+    // m_robotContainer.Intake.dashboard();
+    SmartDashboard.putNumber("X", LimeLightHelpers.getBotPose_TargetSpace("")[2]);
+    SmartDashboard.putNumber("Y", LimeLightHelpers.getBotPose_TargetSpace("")[0]);
+    SmartDashboard.putNumber("rot", LimeLightHelpers.getBotPose_TargetSpace("")[4]);
+    SmartDashboard.putNumber("Bateria", RobotController.getBatteryVoltage());
+    SmartDashboard.putNumber("ID april Tag", LimeLightHelpers.getFiducialID(""));
+    SmartDashboard.putNumber("Pose X", m_robotContainer.drivebase.posex());
+
     m_robotContainer.elevador.dashboard();
-    m_robotContainer.garra.dashboard();
-    m_robotContainer.intakeAlga.dashboard();
-    // SmartDashboard.putBoolean("SENSOR", OperatorConstants.sensor_coral.get());
+    m_robotContainer.Intake.dashboard();
   }
 
   /**
@@ -120,7 +137,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
-  
+
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     } else {
@@ -134,13 +151,7 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
     m_robotContainer.elevador.setElevador();
-    m_robotContainer.garra.setBraco();
-    m_robotContainer.garra.setGarra();
-    // m_robotContainer.intakeAlga.setIntakeAlga();
-    // m_robotContainer.intakeAlga.eixoAlga();
-    m_robotContainer.deepCage.setCage();
-
-    System.out.println("Pose robo: " + m_robotContainer.drivebase.getPose());
+    // m_robotContainer.Intake.setIntake();
 
   }
 

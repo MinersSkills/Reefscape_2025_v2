@@ -5,18 +5,19 @@ import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.config.SparkMaxConfig;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
+
+import edu.wpi.first.wpilibj.PS4Controller;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.OperatorConstants;
 
-public class Elevador extends SubsystemBase{
+public class Elevador extends SubsystemBase {
     private SparkMaxConfig motor_elevadorConf;
     private RelativeEncoder encoder_elevador;
-    // private Garra garra; 
 
-    private XboxController controller2; // Controle do Xbox
-    
+    private PS4Controller controller2; // Controle do Xbox
+
     private boolean botao_Quadrado_aux = false; // Sobe braço L4
 
     private boolean bootao_O_aux = false; // Desce braço
@@ -29,15 +30,13 @@ public class Elevador extends SubsystemBase{
 
         encoder_elevador = OperatorConstants.motorelevador.getEncoder();
 
-        controller2 = new XboxController(1);
+        controller2 = new PS4Controller(0);
 
-        motor_elevadorConf.closedLoop.pid(0.09, 0, 0.005);
+        motor_elevadorConf.closedLoop.pid(0.17, 0, 0.004);
 
         OperatorConstants.motorelevador.configure(motor_elevadorConf, null, PersistMode.kNoPersistParameters);
 
         // encoder_elevador.setPosition(0.0);
-        // garra = new Garra();
-
     }
 
     public void setReferencia(double setpoint) {
@@ -45,18 +44,13 @@ public class Elevador extends SubsystemBase{
     }
 
     public void setElevador() {
-        boolean botaoOativo = controller2.getBButton(); // Descer Garra e elevador
-        boolean botao_Quadrado_ativo = controller2.getXButton(); //L4
+        boolean botaoOativo = controller2.getCircleButton(); // Descer Garra e elevador
+        boolean botao_Quadrado_ativo = controller2.getCrossButton(); // L4
 
-        if(botao_Quadrado_ativo && !botao_Quadrado_aux){
-            setReferencia(108.0);
-            // garra.setReferencia(52.0);
-        }
-        else if (botaoOativo && !bootao_O_aux) {
-            // Quando o botão "O" é pressionado
-            // garra.setReferencia(0.0);
-            setReferencia(0.1);
-
+        if (botao_Quadrado_ativo && !botao_Quadrado_aux) {
+            setReferencia(85);
+        } else if (botaoOativo && !bootao_O_aux) {
+            setReferencia(1);
         }
 
         botao_Quadrado_aux = botao_Quadrado_ativo;

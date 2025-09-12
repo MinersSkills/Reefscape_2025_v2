@@ -17,19 +17,17 @@ public class IntakeCoral extends SequentialCommandGroup {
         addRequirements(elevador, garra);
 
         addCommands(
-            new ElevadorUP(elevador, 32.2).withTimeout(.1),
-            new MoveBracoDown(garra, -5.6).withTimeout(.35),
-            Commands.parallel(
-                            new CoralOut(-0.45).withTimeout(1.1),
-                            new WaitCommand(0.05),
-                            new ElevadorDown(elevador, 24.8)
-                                            .withTimeout(.35)),
+                new ElevadorUP(elevador, 32.2).withTimeout(.1),
+                new MoveBracoDown(garra, -5.6).withTimeout(.35),
+                Commands.parallel(
+                        new CoralOut(-0.45).withTimeout(1.1),
+                        new WaitCommand(0.05),
+                        new ElevadorDown(elevador, 24.8)
+                                .withTimeout(.35)),
 
-            new ElevadorUP(elevador, 36.2).withTimeout(.35),
-            new MoverBracoUP(garra, 23.3).withTimeout(.35),
-            new ElevadorUP(elevador, 1).withTimeout(.35),
-            new CoralStop().withTimeout(.1));
-
+                new ElevadorUP(elevador, 36.2).withTimeout(.35),
+                new MoverBracoUP(garra, 23.3).withTimeout(.35),
+                new ElevadorUP(elevador, 1).withTimeout(.35),
+                new CoralStop().withTimeout(.1));
     }
-
 }

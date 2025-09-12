@@ -33,12 +33,10 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.PIDCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Config;
 import frc.robot.Constants;
 import frc.robot.Constants.AutonConstants;
-import frc.robot.subsystems.Limeligh2;
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
@@ -58,7 +56,8 @@ import swervelib.telemetry.SwerveDriveTelemetry.TelemetryVerbosity;
 
 public class SwerveSubsystem extends SubsystemBase {
 
-  // private final AprilTagFieldLayout fieldLayout = AprilTagFields.k2025Reefscape.loadAprilTagLayoutField();
+  // private final AprilTagFieldLayout fieldLayout =
+  // AprilTagFields.k2025Reefscape.loadAprilTagLayoutField();
 
   /**
    * Swerve drive object.
@@ -72,14 +71,13 @@ public class SwerveSubsystem extends SubsystemBase {
    * PhotonVision class to keep an accurate odometry.
    */
   // private Vision vision;
-  private Limeligh2 limeligh = new Limeligh2();
   PIDController thetaController = new PIDController(0.05, 0, 0);
   PIDController lateraController = new PIDController(0.0275, 0, 0);
   private final ProfiledPIDController frentecController = new ProfiledPIDController(
-    3.2,  // KP (ajuste conforme necessário)
-    0.0,  // KI (normalmente 0 para FRC)
-    1.1,  // KD (ajuste para suavidade)
-    new Constraints(8, 2.0) // Velocidade máxima de 2 m/s, aceleração máxima de 1 m/s²[]]   
+      3.2, // KP (ajuste conforme necessário)
+      0.0, // KI (normalmente 0 para FRC)
+      1.1, // KD (ajuste para suavidade)
+      new Constraints(8, 2.0) // Velocidade máxima de 2 m/s, aceleração máxima de 1 m/s²[]]
   );
   PIDController RotationController = new PIDController(0.055, 0, 0); // Rotacionar usando TX
   PIDController fowardController = new PIDController(0.05, 0, 0); // Rotacionar usando TX
@@ -707,6 +705,12 @@ public class SwerveSubsystem extends SubsystemBase {
     swerveDrive.lockPose();
   }
 
+  public Command Parar() {
+    return runOnce(() -> {
+      swerveDrive.lockPose();
+    });
+  }
+
   /**
    * Gets the current pitch angle of the robot, as reported by the imu.
    *
@@ -750,105 +754,115 @@ public class SwerveSubsystem extends SubsystemBase {
    * 
    */
 
-  public Command AlinharoboRight(double setpoint, double tolerance) {
-    return run(
-        () -> {
-          double rotSpeed = thetaController.calculate(getPose().getRotation().getDegrees(), setpoint);
+  // public Command AlinharoboRight(double setpoint, double tolerance) {
+  // return run(
+  // () -> {
+  // double rotSpeed =
+  // thetaController.calculate(getPose().getRotation().getDegrees(), setpoint);
 
-          drive(ChassisSpeeds.fromFieldRelativeSpeeds(
-              0,
-              0,
-              -rotSpeed,
-              getHeading()));
+  // drive(ChassisSpeeds.fromFieldRelativeSpeeds(
+  // 0,
+  // 0,
+  // -rotSpeed,
+  // getHeading()));
 
-          System.out.println("Tolerancia: " + tolerance + "\n" 
-            + "Velocidade: " + -rotSpeed + "\n" 
-          );
-        })
-        .withTimeout(2)
-        .until(() -> {
-          double erro = setpoint - getPose().getRotation().getDegrees();
-          return Math.abs(erro) <= tolerance;
-        });
+  // System.out.println("Tolerancia: " + tolerance + "\n"
+  // + "Velocidade: " + -rotSpeed + "\n"
+  // );
+  // })
+  // .withTimeout(2)
+  // .until(() -> {
+  // double erro = setpoint - getPose().getRotation().getDegrees();
+  // return Math.abs(erro) <= tolerance;
+  // });
+  // }
+
+  // /**
+  // * Alinha o robo (Translação em x) com a LimeLight 2+ (Reef pra direita)
+  // *
+  // * @return {@link Commands }
+  // *
+  // */
+
+  // public Command alignToAprilTagInFieldRight(double setpoint, double tolerance)
+  // {
+  // return run(() -> {
+  // double posicaoAtual = limeligh.getDadosTag()[0]; // Captura posição atual da
+  // tag
+  // double erro = setpoint - posicaoAtual; // Calcula erro
+  // double velocidade = lateraController.calculate(posicaoAtual, setpoint); //
+  // Controle PID
+
+  // drive(ChassisSpeeds.fromFieldRelativeSpeeds(
+  // 0,
+  // -velocidade,
+  // 0,
+  // getHeading()));
+
+  // System.out.println("Tolerância: " + tolerance + "\nErro: " + erro);
+  // })
+  // .withTimeout(.5)
+  // .until(() -> Math.abs(setpoint - limeligh.getDadosTag()[0]) <= tolerance); //
+  // Condição de parada
+  // }
+
+  // public Command moveToAprilTagTrasRight(double setpoint, double tolerance,
+  // double kp) { // aproxima da tag
+  // // Comando para mover até a nova posição
+  // return run(() -> {
+  // double posicaoAtal = limeligh.getDadosTag()[3];
+  // double error = setpoint - posicaoAtal;
+  // double velocidade = error * kp;
+
+  // drive(ChassisSpeeds.fromFieldRelativeSpeeds(
+  // velocidade,
+  // 0,
+  // 0,
+  // getHeading()));
+
+  // System.out.println("Posição TX: " + limeligh.getDadosTag()[3] + "\n" +
+  // "error: " + error);
+  // })
+  // .until(() -> {
+  // double error = setpoint - limeligh.getDadosTag()[3];
+  // return Math.abs(error) <= tolerance;
+  // });
+  // }
+
+  // public Command moveToAprilTagFrenteRight(double setpoint, double tolerance,
+  // double kp) { // aproxima da tag
+
+  // // Comando para mover até a nova posição
+  // return run(() -> {
+  // // double posicaoAtal = limeligh.getDadosTag()[3];
+  // double posicaoAtal = getPose().getX();
+  // double setP = posicaoAtal;
+  // double setpoinNt = setP + 2.5;
+  // double error = setpoint - posicaoAtal;
+  // double velocidade = frentecController.calculate(posicaoAtal, setpoinNt);
+
+  // drive(ChassisSpeeds.fromFieldRelativeSpeeds(
+  // -velocidade,
+  // 0,
+  // 0,
+  // getHeading()));
+
+  // System.out.println("Posição TX: " + getPose().getX() + "\n" + "error: " +
+  // error);
+  // })
+  // .until(() -> {
+  // double pos = getPose().getX();
+  // double error = setpoint - pos;
+  // return Math.abs(error) <= tolerance;
+  // });
+  // }
+
+  public double posex() {
+    return getPose().getX();
   }
-
-  /**
-   * Alinha o robo (Translação em x) com a LimeLight 2+ (Reef pra direita)
-   * 
-   * @return {@link Commands }
-   * 
-   */
-
-   public Command alignToAprilTagInFieldRight(double setpoint, double tolerance) { 
-    return run(() -> {
-        double posicaoAtual = limeligh.getDadosTag()[0]; // Captura posição atual da tag
-        double erro = setpoint - posicaoAtual; // Calcula erro
-        double velocidade = lateraController.calculate(posicaoAtual, setpoint); // Controle PID
-
-        drive(ChassisSpeeds.fromFieldRelativeSpeeds(
-            0, 
-            -velocidade, 
-            0, 
-            getHeading()));
-
-        System.out.println("Tolerância: " + tolerance + "\nErro: " + erro);
-    })  
-    .withTimeout(.5)
-    .until(() -> Math.abs(setpoint - limeligh.getDadosTag()[0]) <= tolerance); // Condição de parada
-}
-
-
-  public Command moveToAprilTagTrasRight(double setpoint, double tolerance, double kp) { // aproxima da tag
-    // Comando para mover até a nova posição
-    return run(() -> {
-      double posicaoAtal = limeligh.getDadosTag()[3];
-      double error = setpoint - posicaoAtal;
-      double velocidade = error * kp;
-
-      drive(ChassisSpeeds.fromFieldRelativeSpeeds(
-          velocidade,
-          0,
-          0,
-          getHeading()));
-
-      System.out.println("Posição TX: " + limeligh.getDadosTag()[3] + "\n" + "error: " + error);
-    })
-        .until(() -> {
-          double error = setpoint - limeligh.getDadosTag()[3];
-          return Math.abs(error) <= tolerance;
-        });
-  }
-
-  public Command moveToAprilTagFrenteRight(double setpoint, double tolerance, double kp) { // aproxima da tag
-
-    // Comando para mover até a nova posição
-    return run(() -> {
-      // double posicaoAtal = limeligh.getDadosTag()[3];
-      double posicaoAtal = getPose().getX();
-      double setP = posicaoAtal;
-      double setpoinNt = setP + 2.5;
-      double error = setpoint - posicaoAtal;
-      double velocidade = frentecController.calculate(posicaoAtal, setpoinNt);
-
-      drive(ChassisSpeeds.fromFieldRelativeSpeeds(
-          -velocidade,
-          0,
-          0,
-          getHeading()));
-
-      System.out.println("Posição TX: " + getPose().getX() + "\n" + "error: " + error);
-    })
-        .until(() -> {
-          double pos = getPose().getX();
-          double error = setpoint - pos;
-          return Math.abs(error) <= tolerance;
-        });
-  }
-
 
   public Command MoverRobo(double setpoint, double tolerance) {
     return run(() -> {
-      // Pose2d posicaoAtual = getPose();
       Pose2d posicaoAtual = getPose();
 
       // Calcula a velocidade baseada no perfil de movimento
@@ -856,84 +870,83 @@ public class SwerveSubsystem extends SubsystemBase {
 
       drive(ChassisSpeeds.fromFieldRelativeSpeeds(speed, 0, 0, getHeading()));
 
-  })
-  .withTimeout(.5) // Timeout de segurança
-  .until(() -> Math.abs(setpoint - getPose().getX()) <= tolerance);
+    })
+        .withTimeout(.5) // Timeout de segurança
+        .until(() -> Math.abs(setpoint - getPose().getX()) <= tolerance);
+  }
+
+  // public Command AjusteComTX(double setpoint, double tolerance) {
+  // return run(
+  // () -> {
+  // double posicaoAtual = limeligh.getDadosTag()[0];
+  // // double posicaoAtual = limeligh.getDadosTag()[5];
+  // double rotSpeed = RotationController.calculate(posicaoAtual, setpoint);
+
+  // driveFieldOriented(ChassisSpeeds.fromFieldRelativeSpeeds(
+  // 0,
+  // 0,
+  // -rotSpeed,
+  // limeligh.getLimelightPose().getRotation()));
+
+  // System.out.println("Tolerancia: " + tolerance + "\n"
+  // + "Velocidade: " + -rotSpeed + "\n"
+  // );
+  // })
+  // .withTimeout(1)
+  // .until(() -> {
+  // double erro = setpoint - limeligh.getDadosTag()[0];
+  // return Math.abs(erro) <= tolerance;
+  // });
+  // }
+
+  // public Command AjusteComTY(double setpoint, double tolerance) {
+  // double posicaoAtual = getPose().getX();
+
+  // double posicaoDesejada = posicaoAtual - setpoint;
+
+  // return run(
+  // () -> {
+  // // double posicaoAtual = limeligh.getDadosTag()[3];
+  // double velocidade = fowardController.calculate(getPose().getX(),
+  // posicaoDesejada);
+
+  // driveFieldOriented(ChassisSpeeds.fromFieldRelativeSpeeds(
+  // velocidade,
+  // 0,
+  // 0,
+  // getHeading()));
+
+  // })
+  // .withTimeout(1)
+  // .until(() -> {
+  // double erro = posicaoDesejada - getPose().getX();
+  // return Math.abs(erro) <= tolerance;
+  // });
+  // }
+
+  // public Command AjusteComTY_Tras(double setpoint, double tolerance) {
+  // double posicaoAtual = getPose().getX();
+
+  // double posicaoDesejada = posicaoAtual - setpoint;
+
+  // return run(
+  // () -> {
+  // // double posicaoAtual = limeligh.getDadosTag()[3];
+  // double velocidade = fowardController.calculate(getPose().getX(),
+  // posicaoDesejada);
+
+  // driveFieldOriented(ChassisSpeeds.fromFieldRelativeSpeeds(
+  // -velocidade,
+  // 0,
+  // 0,
+  // getHeading()));
+
+  // })
+  // .withTimeout(1)
+  // .until(() -> {
+  // double erro = posicaoDesejada - getPose().getX();
+  // return Math.abs(erro) <= tolerance;
+  // });
+  // }
+
 }
-
-
-public Command AjusteComTX(double setpoint, double tolerance) {
-  return run(
-      () -> {
-        double posicaoAtual = limeligh.getDadosTag()[0];
-        // double posicaoAtual = limeligh.getDadosTag()[5];
-        double rotSpeed = RotationController.calculate(posicaoAtual, setpoint);
-
-        driveFieldOriented(ChassisSpeeds.fromFieldRelativeSpeeds(
-            0,
-            0,
-            -rotSpeed,
-            limeligh.getLimelightPose().getRotation()));
-
-        System.out.println("Tolerancia: " + tolerance + "\n" 
-          + "Velocidade: " + -rotSpeed + "\n" 
-        );
-      })
-      .withTimeout(1)
-      .until(() -> {
-        double erro = setpoint - limeligh.getDadosTag()[0];
-        return Math.abs(erro) <= tolerance;
-      });
-}
-
-public Command AjusteComTY(double setpoint, double tolerance) {
-  double posicaoAtual = getPose().getX();
-
-  double posicaoDesejada = posicaoAtual - setpoint;
-
-  return run(
-      () -> {
-        // double posicaoAtual = limeligh.getDadosTag()[3];
-        double velocidade = fowardController.calculate(getPose().getX(), posicaoDesejada);
-
-        driveFieldOriented(ChassisSpeeds.fromFieldRelativeSpeeds(
-            velocidade,
-            0,
-            0,
-            getHeading()));
-
-      })
-      .withTimeout(1)
-      .until(() -> {
-        double erro = posicaoDesejada - getPose().getX();
-        return Math.abs(erro) <= tolerance;
-      });
-}
-
-public Command AjusteComTY_Tras(double setpoint, double tolerance) {
-  double posicaoAtual = getPose().getX();
-
-  double posicaoDesejada = posicaoAtual - setpoint;
-
-  return run(
-      () -> {
-        // double posicaoAtual = limeligh.getDadosTag()[3];
-        double velocidade = fowardController.calculate(getPose().getX(), posicaoDesejada);
-
-        driveFieldOriented(ChassisSpeeds.fromFieldRelativeSpeeds(
-            -velocidade,
-            0,
-            0,
-            getHeading()));
-
-      })
-      .withTimeout(1)
-      .until(() -> {
-        double erro = posicaoDesejada - getPose().getX();
-        return Math.abs(erro) <= tolerance;
-      });
-}
-
-}
-
-

@@ -85,6 +85,7 @@ public class Garra extends SubsystemBase {
         boolean botaotrianguloativo = controller.getYButton(); // Botão Triângulo
         boolean botao_RT_ativo = controller.getStartButton();
 
+
         if (botaoXativo && !bootao_x_aux) {
             setReferencia(23.3);
             // setReferenciaGarr(posicaoGarra);
