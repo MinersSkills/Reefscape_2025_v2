@@ -5,6 +5,8 @@ import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.config.SparkMaxConfig;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
+
+import edu.wpi.first.wpilibj.PS4Controller;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -14,10 +16,10 @@ public class Garra extends SubsystemBase {
     private SparkMaxConfig motor_bracoConf;
     public RelativeEncoder encoder_braco;
 
-    private SparkMaxConfig motor_garraConf;
+    // private SparkMaxConfig motor_garraConf;
     public RelativeEncoder encoder_garra;
 
-    private XboxController controller;
+    private PS4Controller controller;
 
     private boolean bootao_x_aux = false; // Sobe braço L2 e L3
 
@@ -35,24 +37,23 @@ public class Garra extends SubsystemBase {
         motor_bracoConf = new SparkMaxConfig();
         motor_bracoConf.encoder.positionConversionFactor(1);
         motor_bracoConf.closedLoop.positionWrappingEnabled(false);
-        motor_bracoConf.closedLoop.outputRange(-0.35, 0.85);
+        motor_bracoConf.closedLoop.outputRange(-0.2, 0.3);
         motor_bracoConf.inverted(false);
         motor_bracoConf.idleMode(IdleMode.kBrake);
 
-        motor_garraConf = new SparkMaxConfig();
-
-        motor_garraConf.inverted(true);
-        motor_garraConf.idleMode(IdleMode.kCoast);
+        // motor_garraConf = new SparkMaxConfig();
+        // motor_garraConf.inverted(true);
+        // motor_garraConf.idleMode(IdleMode.kCoast);
 
         encoder_braco = OperatorConstants.motorbraco.getEncoder();
-        encoder_garra = OperatorConstants.motorGarra.getEncoder();
+        // encoder_garra = OperatorConstants.motorGarra.getEncoder();
 
-        controller = new XboxController (1);
+        controller = new PS4Controller (0);
 
         OperatorConstants.motorbraco.configure(motor_bracoConf, null, PersistMode.kNoPersistParameters);
-        OperatorConstants.motorGarra.configure(motor_garraConf, null, PersistMode.kNoPersistParameters);
+        // OperatorConstants.motorGarra.configure(motor_garraConf, null, PersistMode.kNoPersistParameters);
 
-        encoder_braco.setPosition(0.0);
+        // encoder_braco.setPosition(0.0);
         // encoder_garra.setPosition(0.0);
 
     }
@@ -60,9 +61,9 @@ public class Garra extends SubsystemBase {
     public void setReferencia(double setpoint) {
         double currentPosition = encoder_braco.getPosition(); // Pegue a posição atual do motor
 
-        if (setpoint < 0) {
+        if (setpoint < 0.5) {
             System.out.println("MENOR");
-            motor_bracoConf.closedLoop.p(0.087);
+            motor_bracoConf.closedLoop.p(0.03);
             OperatorConstants.motorbraco.configure(motor_bracoConf, null, PersistMode.kNoPersistParameters);
             OperatorConstants.motorbraco.getClosedLoopController().setReference(setpoint, ControlType.kPosition);
 
@@ -73,7 +74,7 @@ public class Garra extends SubsystemBase {
             }
 
         } else {
-            motor_bracoConf.closedLoop.pid(0.15, 0, 0);
+            motor_bracoConf.closedLoop.pid(0.4, 0, 0);
             OperatorConstants.motorbraco.configure(motor_bracoConf, null, PersistMode.kNoPersistParameters);
             OperatorConstants.motorbraco.getClosedLoopController().setReference(setpoint, ControlType.kPosition);
 
@@ -81,23 +82,23 @@ public class Garra extends SubsystemBase {
     }
 
     public void setBraco() {
-        boolean botaoXativo = controller.getAButton(); // Botão X
-        boolean botaotrianguloativo = controller.getYButton(); // Botão Triângulo
-        boolean botao_RT_ativo = controller.getStartButton();
+        boolean botaoXativo = controller.getCrossButton(); // Botão X
+        boolean botaotrianguloativo = controller.getTriangleButton(); // Botão Triângulo
+        boolean botao_RT_ativo = controller.getSquareButton();
 
 
         if (botaoXativo && !bootao_x_aux) {
-            setReferencia(23.3);
+            setReferencia(10);
             // setReferenciaGarr(posicaoGarra);
 
         } else if (botaotrianguloativo && !bootao_triangulo_aux) {
-            setReferencia(0);
+            setReferencia(0.1);
             // setReferenciaGarr(-3);
 
         }
-        else if(botao_RT_ativo && !botao_RT_aux){
-            setReferencia(16);
-        }
+        // else if(botao_RT_ativo && !botao_RT_aux){
+        //     setReferencia(16);
+        // }
 
         // Atualiza os estados auxiliares dos botões
         bootao_x_aux = botaoXativo;
@@ -105,28 +106,28 @@ public class Garra extends SubsystemBase {
         botao_RT_aux = botao_RT_ativo;
     }
 
-    public void setGarra() {
-        boolean botao_LB_ativo = controller.getLeftBumperButton(); // Desce garra
-        boolean botaoRBativo = controller.getRightBumperButton();
+    // public void setGarra() {
+    //     boolean botao_LB_ativo = controller.getLeftBumperButton(); // Desce garra
+    //     boolean botaoRBativo = controller.getRightBumperButton();
         
 
-        if (botao_LB_ativo) {
-            OperatorConstants.motorGarra.set(0.3);
+    //     if (botao_LB_ativo) {
+    //         OperatorConstants.motorGarra.set(0.3);
 
-        }
-        else if(botaoRBativo){
-            OperatorConstants.motorGarra.set(-0.7);
-        }
-        else {
-            OperatorConstants.motorGarra.stopMotor();
+    //     }
+    //     else if(botaoRBativo){
+    //         OperatorConstants.motorGarra.set(-0.7);
+    //     }
+    //     else {
+    //         OperatorConstants.motorGarra.stopMotor();
 
-        }
+    //     }
 
-    }
+    // }
 
     public void dashboard() {
         SmartDashboard.putNumber("Posicao Atual motor braco: ", encoder_braco.getPosition());
-        SmartDashboard.putNumber("Posicao Atual motor garra: ", encoder_garra.getPosition());
+        // SmartDashboard.putNumber("Posicao Atual motor garra: ", encoder_garra.getPosition());
     }
 
 }

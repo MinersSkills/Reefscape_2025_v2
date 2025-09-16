@@ -21,6 +21,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
+
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandPS4Controller;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -39,10 +40,8 @@ import frc.robot.commands.swervedrive.auto.ElevadorDownAuto;
 import frc.robot.commands.swervedrive.auto.ElevadorUPAuto;
 import frc.robot.commands.swervedrive.auto.MoveBracoDownAuto;
 import frc.robot.commands.swervedrive.auto.MoveToAprilTag;
-import frc.robot.subsystems.DeepCage;
 import frc.robot.subsystems.Elevador;
 import frc.robot.subsystems.Garra;
-import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 import java.io.File;
 
@@ -67,8 +66,8 @@ public class RobotContainer {
                         "swerve/neo"));
         public final Garra garra = new Garra();
         public final Elevador elevador = new Elevador();
-        public final Intake Intake = new Intake();
-        public final DeepCage deepCage = new DeepCage();
+        // public final Intake Intake = new Intake();
+        // public final DeepCage deepCage = new DeepCage();
 
         /**
          * Converts driver input into a field-relative ChassisSpeeds that is controlled

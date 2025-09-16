@@ -69,7 +69,7 @@ public final class Constants {
     public static final double RIGHT_X_DEADBAND = 0.1;
     public static final double TURN_CONSTANT = 4;
 
-    public static SparkMax motorbraco = new SparkMax(23, MotorType.kBrushless);
+    public static SparkMax motorbraco = new SparkMax(6, MotorType.kBrushless);
     public static SparkMax motorelevador = new SparkMax(11, MotorType.kBrushless);
     public static SparkMax motorGarra = new SparkMax(18, MotorType.kBrushless);
     public static SparkMax motorIntake = new SparkMax(13, MotorType.kBrushless);

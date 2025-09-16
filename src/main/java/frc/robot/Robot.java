@@ -81,15 +81,16 @@ public class Robot extends TimedRobot {
     // m_robotContainer.elevador.dashboard();
     // m_robotContainer.garra.dashboard();
     // m_robotContainer.Intake.dashboard();
-    SmartDashboard.putNumber("X", LimeLightHelpers.getBotPose_TargetSpace("")[2]);
-    SmartDashboard.putNumber("Y", LimeLightHelpers.getBotPose_TargetSpace("")[0]);
-    SmartDashboard.putNumber("rot", LimeLightHelpers.getBotPose_TargetSpace("")[4]);
+    // SmartDashboard.putNumber("X", LimeLightHelpers.getBotPose_TargetSpace("")[2]);
+    // SmartDashboard.putNumber("Y", LimeLightHelpers.getBotPose_TargetSpace("")[0]);
+    // SmartDashboard.putNumber("rot", LimeLightHelpers.getBotPose_TargetSpace("")[4]);
     SmartDashboard.putNumber("Bateria", RobotController.getBatteryVoltage());
-    SmartDashboard.putNumber("ID april Tag", LimeLightHelpers.getFiducialID(""));
+    // SmartDashboard.putNumber("ID april Tag", LimeLightHelpers.getFiducialID(""));
     SmartDashboard.putNumber("Pose X", m_robotContainer.drivebase.posex());
 
-    m_robotContainer.elevador.dashboard();
-    m_robotContainer.Intake.dashboard();
+    m_robotContainer.garra.dashboard();
+    // m_robotContainer.elevador.dashboard();
+    // m_robotContainer.Intake.dashboard();
   }
 
   /**
@@ -150,8 +151,9 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void teleopPeriodic() {
-    m_robotContainer.elevador.setElevador();
+    // m_robotContainer.elevador.setElevador();
     // m_robotContainer.Intake.setIntake();
+    m_robotContainer.garra.setBraco();
 
   }
 
