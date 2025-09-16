@@ -94,7 +94,7 @@ public class RobotContainer {
         SwerveInputStream driveAngularVelocitySim = SwerveInputStream.of(drivebase.getSwerveDrive(),
                         () -> -drivePS4.getLeftY(),
                         () -> -drivePS4.getLeftX())
-                        .withControllerRotationAxis(() -> drivePS4.getRawAxis(2))
+                        .withControllerRotationAxis(() -> drivePS4.getRawAxis(2)) 
                         .deadband(OperatorConstants.DEADBAND)
                         .scaleTranslation(0.85)
                         .allianceRelativeControl(true);

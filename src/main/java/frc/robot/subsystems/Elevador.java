@@ -48,9 +48,11 @@ public class Elevador extends SubsystemBase {
         boolean botao_Quadrado_ativo = controller2.getCrossButton(); // L4
 
         if (botao_Quadrado_ativo && !botao_Quadrado_aux) {
+            OperatorConstants.led.setSpeed(-0.11);
             setReferencia(85);
         } else if (botaoOativo && !bootao_O_aux) {
-            setReferencia(1);
+            OperatorConstants.led.setSpeed(0.75);
+            setReferencia(-1);
         }
 
         botao_Quadrado_aux = botao_Quadrado_ativo;

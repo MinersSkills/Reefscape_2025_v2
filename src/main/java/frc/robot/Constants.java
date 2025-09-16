@@ -10,6 +10,7 @@ import com.revrobotics.spark.SparkLowLevel.MotorType;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.PWM;
 import swervelib.math.Matter;
 
 /**
@@ -68,9 +69,10 @@ public final class Constants {
     public static final double LEFT_Y_DEADBAND = 0.1;
     public static final double RIGHT_X_DEADBAND = 0.1;
     public static final double TURN_CONSTANT = 4;
+    public static final PWM led = new PWM(8);
 
     public static SparkMax motorbraco = new SparkMax(6, MotorType.kBrushless);
-    public static SparkMax motorelevador = new SparkMax(11, MotorType.kBrushless);
+    public static SparkMax motorelevador = new SparkMax(3, MotorType.kBrushless);
     public static SparkMax motorGarra = new SparkMax(18, MotorType.kBrushless);
     public static SparkMax motorIntake = new SparkMax(13, MotorType.kBrushless);
     public static SparkMax motorExioIntake = new SparkMax(16, MotorType.kBrushless);

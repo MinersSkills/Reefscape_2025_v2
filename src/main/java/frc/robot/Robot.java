@@ -9,6 +9,7 @@ import edu.wpi.first.cscore.UsbCamera;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PS4Controller;
+import edu.wpi.first.wpilibj.PWM;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
@@ -34,6 +35,7 @@ public class Robot extends TimedRobot {
   private RobotContainer m_robotContainer;
 
   private Timer disabledTimer;
+  private PWM led;
 
   private PS4Controller controle;
 
@@ -58,6 +60,7 @@ public class Robot extends TimedRobot {
 
     disabledTimer = new Timer();
 
+
     sensotic = new DigitalInput(0);
 
     controle = new PS4Controller(0);
@@ -81,16 +84,20 @@ public class Robot extends TimedRobot {
     // m_robotContainer.elevador.dashboard();
     // m_robotContainer.garra.dashboard();
     // m_robotContainer.Intake.dashboard();
-    // SmartDashboard.putNumber("X", LimeLightHelpers.getBotPose_TargetSpace("")[2]);
-    // SmartDashboard.putNumber("Y", LimeLightHelpers.getBotPose_TargetSpace("")[0]);
-    // SmartDashboard.putNumber("rot", LimeLightHelpers.getBotPose_TargetSpace("")[4]);
+    // SmartDashboard.putNumber("X",
+    // LimeLightHelpers.getBotPose_TargetSpace("")[2]);
+    // SmartDashboard.putNumber("Y",
+    // LimeLightHelpers.getBotPose_TargetSpace("")[0]);
+    // SmartDashboard.putNumber("rot",
+    // LimeLightHelpers.getBotPose_TargetSpace("")[4]);
     SmartDashboard.putNumber("Bateria", RobotController.getBatteryVoltage());
     // SmartDashboard.putNumber("ID april Tag", LimeLightHelpers.getFiducialID(""));
     SmartDashboard.putNumber("Pose X", m_robotContainer.drivebase.posex());
 
     m_robotContainer.garra.dashboard();
-    // m_robotContainer.elevador.dashboard();
+    m_robotContainer.elevador.dashboard();
     // m_robotContainer.Intake.dashboard();
+
   }
 
   /**
@@ -151,9 +158,9 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void teleopPeriodic() {
-    // m_robotContainer.elevador.setElevador();
+    m_robotContainer.elevador.setElevador();
     // m_robotContainer.Intake.setIntake();
-    m_robotContainer.garra.setBraco();
+    // m_robotContainer.garra.setBraco();
 
   }
 
